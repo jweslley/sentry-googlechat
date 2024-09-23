@@ -1,12 +1,10 @@
 from __future__ import absolute_import
 
-from collections import defaultdict
-
 from sentry import tagstore
 from sentry.plugins.bases import notify
 from sentry.utils import json
 from sentry.http import safe_urlopen
-from sentry.integrations import FeatureDescription, IntegrationFeatures
+from sentry.integrations.base import FeatureDescription, IntegrationFeatures
 from sentry_plugins.base import CorePluginMixin
 
 from . import __version__, __doc__ as package_doc
