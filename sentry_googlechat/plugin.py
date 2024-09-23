@@ -1,7 +1,5 @@
 from __future__ import absolute_import
 
-from collections import defaultdict
-
 from sentry import tagstore
 from sentry.plugins.bases import notify
 from sentry.utils import json

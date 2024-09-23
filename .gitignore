@@ -5,3 +5,4 @@ build/*
 **/build/*
 *.pyc
 __pycache__
+.venv

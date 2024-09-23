@@ -11,10 +11,10 @@ to `Google Chat <https://gsuite.google.com/products/chat/>`_.
 
 from setuptools import setup, find_packages
 from sentry_googlechat import __version__
-import os
 
-cwd = os.path.realpath(os.path.join(os.getcwd(), os.path.dirname(__file__)))
-readme_text = open(os.path.join(cwd, 'README.md')).read()
+
+with open('README.md', 'r') as f:
+    long_description = f.read()
 
 setup(
     name='sentry-googlechat',
@@ -22,14 +22,11 @@ setup(
     author='Jonhnny Weslley',
     author_email='jw@jonhnnyweslley.net',
     url='https://github.com/jweslley/sentry-googlechat',
-    long_description=readme_text,
+    long_description=long_description,
     long_description_content_type="text/markdown",
     license='MIT',
     description='A Sentry plugin which posts notifications to Google Chat (https://gsuite.google.com/products/chat/).',
     packages=find_packages(),
-    install_requires=[
-      'sentry',
-    ],
     include_package_data=True,
     entry_points={
         'sentry.apps': [
