@@ -116,7 +116,7 @@ class GoogleChatPlugin(CorePluginMixin, notify.NotificationPlugin):
             if excluded_tags and (key in excluded_tags or std_key in excluded_tags):
                 continue
 
-            tags.append({ "keyValue": { "topLabel": tag_key.encode("utf-8"), "content": tag_value.encode("utf-8") }})
+            tags.append({ "keyValue": { "topLabel": tag_key, "content": tag_value }})
         return tags
 
     def notify(self, notification, raise_exception=False):
@@ -127,12 +127,12 @@ class GoogleChatPlugin(CorePluginMixin, notify.NotificationPlugin):
         if not self.is_configured(project):
             return
 
-        event_title = event.title.encode('utf-8')
-        event_message = event.message.encode('utf-8')
+        event_title = event.title
+        event_message = event.message
 
-        project_name = project.get_full_name().encode('utf-8')
+        project_name = project.get_full_name()
         if group.culprit:
-            culprit = group.culprit.encode("utf-8")
+            culprit = group.culprit
         else:
             culprit = None
 
@@ -161,9 +161,16 @@ class GoogleChatPlugin(CorePluginMixin, notify.NotificationPlugin):
         sections.append({ "widgets": buttons })
 
         title = '[%s] %s' % (project_name, event_title)
-        payload = {"cards": [
-            { "header": { "title": title, "subtitle": event_message },
-             "sections": sections } ]}
+        text_message = '%s\n%s' % (title, event_message)
+        payload = {
+            "text": text_message,
+            "cards": [
+                {
+                    "header": {"title": title, "subtitle": event_message},
+                    "sections": sections,
+                }
+            ],
+        }
 
         webhook = self.get_option('webhook', project)
         return safe_urlopen(webhook, method='POST', data=json.dumps(payload))
