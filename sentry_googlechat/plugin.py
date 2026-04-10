@@ -4,8 +4,14 @@ from sentry import tagstore
 from sentry.plugins.bases import notify
 from sentry.utils import json
 from sentry.http import safe_urlopen
-from sentry.integrations.base import FeatureDescription, IntegrationFeatures
 from sentry_plugins.base import CorePluginMixin
+
+try:
+    from sentry.integrations.base import FeatureDescription, IntegrationFeatures
+except ImportError:
+    # Sentry compatibility: in some versions these symbols are moved/removed.
+    FeatureDescription = None
+    IntegrationFeatures = None
 
 from . import __version__, __doc__ as package_doc
 
@@ -23,14 +29,17 @@ class GoogleChatPlugin(CorePluginMixin, notify.NotificationPlugin):
         ('Source', 'https://github.com/jweslley/sentry-googlechat'),
     )
     required_field = "webhook"
-    feature_descriptions = [
-        FeatureDescription(
-            """
-            Configure Sentry rules to trigger notifications based on conditions you set.
-            """,
-            IntegrationFeatures.ALERT_RULE,
-        )
-    ]
+    if FeatureDescription and IntegrationFeatures:
+        feature_descriptions = [
+            FeatureDescription(
+                """
+                Configure Sentry rules to trigger notifications based on conditions you set.
+                """,
+                IntegrationFeatures.ALERT_RULE,
+            )
+        ]
+    else:
+        feature_descriptions = []
 
     def is_configured(self, project):
         return bool(self.get_option('webhook', project))
